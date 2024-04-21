@@ -6,6 +6,7 @@ from uuid import uuid4 as uuid
 import uvicorn
 from config.database import Session, engine, Base
 from models.search import Search as SearchModel
+from models.contact import Contact as ContactModel
 from fastapi.responses import JSONResponse
 from fastapi.encoders import jsonable_encoder
 from browser import caller
@@ -22,6 +23,12 @@ Base.metadata.create_all(bind=engine)
 
 class Search(BaseModel):
     prompt : str
+
+class Workshopper(BaseModel):
+    name : str
+    email : str
+    state : int
+    decision : int
 
 @app.get('/')
 def read_root():
@@ -100,7 +107,27 @@ def busqueda(search: Search):
     new_search = SearchModel(**aux)
     db.add(new_search)
     db.commit()
-    return {"workshoppers": searchRequest["workshoppers"], "materials":searchRequest["materials"]}
+    # return {"workshoppers": searchRequest["workshoppers"], "materials":searchRequest["materials"]}
+    return {"workshoppers": searchRequest["workshoppers"]}
+
+@app.get("/contacts", status_code=status.HTTP_200_OK)
+def get_all_contacts():
+    db = Session()
+    result = db.query(ContactModel).all()
+    if result is not None:
+        return JSONResponse(status_code=status.HTTP_200_OK, content=jsonable_encoder(result))
+    else:
+        return JSONResponse(status_code=status.HTTP_200_OK, content={"response": "La base de datos se encuentra vacia..."})
+
+@app.post("/contact")
+def contact(workshopper: Workshopper):
+    db = Session()
+    aux = {"name": workshopper.name, "email": workshopper.email, "state": workshopper.state, "decision": workshopper.decision}
+    new_contact = ContactModel(**aux)
+    db.add(new_contact)
+    db.commit()
+    return {"name": workshopper.name, "email": workshopper.email, "state": workshopper.state, "decision": workshopper.decision}
+    # return {"workshoppers": searchRequest["workshoppers"], "materials":searchRequest["materials"]}
 
 if __name__ == "__main__":
     uvicorn.run(app, host="localhost", port=8000)

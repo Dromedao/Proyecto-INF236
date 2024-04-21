@@ -48,39 +48,110 @@ def search_tallerista(requeriments):
     boolean_talleristas = True
 
     workshoppers = []
-
+    emails = []
     print("TALLERISTAS SUGERIDOS")
-
-    linkedin = google_search("site:cl.linkedin.com/in/ " + tallerista, 5)
+    #ANTERIORMENTE 5
+    linkedin = google_search('"@gmail.com" site:cl.linkedin.com/in/ ' + tallerista , 10)
+    # print("\n\n",linkedin,"\n\n")
     try:
         for item in linkedin:
-            url = item['link']
-            # print("\t", url[27:].split("-")[0], url)
-            workshoppers.append([url[27:].split("-")[0], url])
+            # print("\n\n",item["snippet"],"\n\n")
+            for element in item["snippet"].split():
+                element = element.replace("http://","")
+                if "@" in element:
+                    if element[-1] != "m" and "m" in element:
+                        element = element[:len(element)-element[::-1].index("m")]
+                    print("\n\n",element.strip(),"\n\n")
+                    emails.append(element.strip())
+                    url = item['link']
+                    workshoppers.append([url[27:].split("-")[0], url, element.strip()])
+                    break
     except:
         boolean_talleristas = False
-    superprof = google_search("site:superprof.com/ " + tallerista, 5)
+
+    linkedin = google_search('"@outlook.com" site:cl.linkedin.com/in/ ' + tallerista , 10)
+    # print("\n\n",linkedin,"\n\n")
     try:
-        for item in superprof:
-            url = item['link']
-            page = requests.get(url)
-            soup = BeautifulSoup(page.content, 'html.parser')
-            elements_with_class = (soup.find_all(attrs={"class": "name"}))
-            elements_with_class2 = (soup.find_all(attrs={"class": "landing-v4-ads-pic-firstname"}))
-            try:
-                if len(elements_with_class) != 0:
-                    # print("\t",elements_with_class[0].text, url)
-                    workshoppers.append([elements_with_class[0].text, url])
-                elif len(elements_with_class2) != 0:
-                    # print("\t",elements_with_class2[0].text, url)
-                    workshoppers.append([elements_with_class2[0].text, url])
-            except:
-                # print(url)
-                pass
-            if boolean_talleristas == False:
-                boolean_talleristas = True
+        for item in linkedin:
+            # print("\n\n",item["snippet"],"\n\n")
+            for element in item["snippet"].split():
+                if "@" in element:
+                    element = element.replace("http://","")
+                    if element[-1] != "m" and "m" in element:
+                        element = element[:len(element)-element[::-1].index("m")]
+                    print("\n\n",element.strip(),"\n\n")
+                    emails.append(element.strip())
+                    url = item['link']
+                    workshoppers.append([url[27:].split("-")[0], url, element.strip()])
+                    break
     except:
-        pass
+        boolean_talleristas = False
+
+    linkedin = google_search('"@hotmail.com" site:cl.linkedin.com/in/ ' + tallerista , 10)
+    # print("\n\n",linkedin,"\n\n")
+    try:
+        for item in linkedin:
+            # print("\n\n",item["snippet"],"\n\n")
+            for element in item["snippet"].split():
+                if "@" in element:
+                    element = element.replace("http://","")
+                    if element[-1] != "m" and "m" in element:
+                        element = element[:len(element)-element[::-1].index("m")]
+                    print("\n\n",element.strip(),"\n\n")
+                    emails.append(element.strip())
+                    url = item['link']
+                    workshoppers.append([url[27:].split("-")[0], url, element.strip()])
+                    break
+    except:
+        boolean_talleristas = False
+
+    linkedin = google_search('"@yahoo.com" site:cl.linkedin.com/in/ ' + tallerista , 10)
+    # print("\n\n",linkedin,"\n\n")
+    try:
+        for item in linkedin:
+            # print("\n\n",item["snippet"],"\n\n")
+            for element in item["snippet"].split():
+                if "@" in element:
+                    element = element.replace("http://","")
+                    if element[-1] != "m" and "m" in element:
+                        element = element[:len(element)-element[::-1].index("m")]
+                    print("\n\n",element.strip(),"\n\n")
+                    emails.append(element.strip())
+                    url = item['link']
+                    workshoppers.append([url[27:].split("-")[0], url, element.strip()])
+                    break
+    except: 
+        boolean_talleristas = False
+    # print(emails)
+    emails = list(set(emails))
+    print(emails)
+    #ANTERIORMENTE 5
+    # superprof = google_search('"@gmail.com" site:superprof.com/ ' + tallerista, 8)
+    # try:
+    #     for item in superprof:
+    #         # print("\n\n",item["snippet"].split(),"\n\n")
+    #         for element in item["snippet"].split():
+    #             if "@" in element:
+    #                 print("\n\n",element,"\n\n")
+    #         url = item['link']
+    #         page = requests.get(url)
+    #         soup = BeautifulSoup(page.content, 'html.parser')
+    #         elements_with_class = (soup.find_all(attrs={"class": "name"}))
+    #         elements_with_class2 = (soup.find_all(attrs={"class": "landing-v4-ads-pic-firstname"}))
+    #         try:
+    #             if len(elements_with_class) != 0:
+    #                 # print("\t",elements_with_class[0].text, url)
+    #                 workshoppers.append([elements_with_class[0].text, url])
+    #             elif len(elements_with_class2) != 0:
+    #                 # print("\t",elements_with_class2[0].text, url)
+    #                 workshoppers.append([elements_with_class2[0].text, url])
+    #         except:
+    #             # print(url)
+    #             pass
+    #         if boolean_talleristas == False:
+    #             boolean_talleristas = True
+    # except:
+    #     pass
     if boolean_talleristas == False:
     #     print("No se han encontrado talleristas para la ocasión...")
         workshoppers.append("No se han encontrado talleristas para la ocasión")
@@ -192,16 +263,19 @@ def caller(mensaje):
             requeriments_list = list(map(lambda x: x.split(":")[1][1:] if ":" in x else x,response.strip().split("\n")))
             if ("FALTANTE" not in requeriments_list[0]):
                 posibles_talleristas = search_tallerista(requeriments_list)
-                if "FALTANTE" not in requeriments_list[1]:
-                    materiales = search_material(requeriments_list)
-                else:
-                    materiales = [["No se sugieren materiales..."],["No se buscan materiales..."]]
-                    print("No se sugieren materiales...")
+                # if "FALTANTE" not in requeriments_list[1]:
+                #     materiales = search_material(requeriments_list)
+                # else:
+                #     materiales = [["No se sugieren materiales..."],["No se buscan materiales..."]]
+                #     print("No se sugieren materiales...")
             else:
                 print("No se cumplen con los minimos requerimientos para realizar la busqueda...\n")
-                return {"workshoppers": ["No se han encontrado talleristas para la ocasión"], "materials":[["No se sugieren materiales..."],["No se buscan materiales..."]]}
+                # return {"workshoppers": ["No se han encontrado talleristas para la ocasión"], "materials":[["No se sugieren materiales..."],["No se buscan materiales..."]]}
+                return {"workshoppers": ["No se han encontrado talleristas para la ocasión"]}
         else:
             print("No se cumplen con los minimos requerimientos para realizar la busqueda...\n")
-            return {"workshoppers": ["No se han encontrado talleristas para la ocasión"], "materials":[["No se sugieren materiales..."],["No se buscan materiales..."]]}
+            # return {"workshoppers": ["No se han encontrado talleristas para la ocasión"], "materials":[["No se sugieren materiales..."],["No se buscan materiales..."]]}
+            return {"workshoppers": ["No se han encontrado talleristas para la ocasión"]}
     
-        return {"workshoppers": posibles_talleristas, "materials":materiales}
+        # return {"workshoppers": posibles_talleristas, "materials":materiales}
+        return {"workshoppers": posibles_talleristas}
