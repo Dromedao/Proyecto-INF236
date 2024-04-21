@@ -12,9 +12,10 @@ from fastapi.encoders import jsonable_encoder
 from browser import caller
 
 """
-Grupo 9
-Joaquín Lopez
-Matías Guerra
+Matías Leonardo Guerra Valles
+Joaquin Alejandro Lopez Diaz
+Sebastian Ignacio Torrealba Catalan
+Joaquin Antonio Veliz Carmona
 """
 
 app = FastAPI()
