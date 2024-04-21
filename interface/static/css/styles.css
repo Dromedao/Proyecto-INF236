@@ -1,4 +1,30 @@
-input.st-be.st-bz.st-c0.st-c1.st-c2.st-c3.st-c4.st-c5.st-c6.st-c7.st-c8.st-b9.st-c9.st-ca.st-cb.st-cc.st-cd.st-ce.st-cf.st-cg.st-ae.st-af.st-ag.st-ch.st-ai.st-aj.st-by.st-ci.st-cj.st-ck{
-    /* background-color: #bfbfbf; */
+/* input.st-be.st-bz.st-c0.st-c1.st-c2.st-c3.st-c4.st-c5.st-c6.st-c7.st-c8.st-b9.st-c9.st-ca.st-cb.st-cc.st-cd.st-ce.st-cf.st-cg.st-ae.st-af.st-ag.st-ch.st-ai.st-aj.st-by.st-ci.st-cj.st-ck.st-bf {
     color: black;
+}
+
+input.st-b4.st-b9.st-bx.st-b2.st-bp.st-ae.st-af.st-ag.st-ah.st-ai.st-aj.st-by.st-bu{
+    color:black;
+}
+
+input.st-bf.st-c0.st-c1.st-c2.st-c3.st-c4.st-c5.st-c6.st-c7.st-c8.st-c9.st-b9.st-ca.st-cb.st-cc.st-cd.st-ce.st-cf.st-cg.st-ch.st-ae.st-af.st-ag.st-ci.st-ai.st-aj.st-bz.st-cj.st-ck.st-cl{
+    color: black;
+} */
+
+input.st-bf.st-c0.st-c1.st-c2.st-c3.st-c4.st-c5.st-c6.st-c7.st-c8.st-c9.st-b9.st-ca.st-cb.st-cc.st-cd.st-ce.st-cf.st-cg.st-ch.st-ae.st-af.st-ag.st-ci.st-ai.st-aj.st-bz.st-cj.st-ck.st-cl{
+    color:black;
+    caret-color: black;
+}
+
+input.st-bh.st-c2.st-c3.st-c4.st-c5.st-c6.st-c7.st-c8.st-c9.st-ca.st-cb.st-b9.st-cc.st-cd.st-ce.st-cf.st-cg.st-ch.st-ci.st-cj.st-ae.st-af.st-ag.st-ck.st-ai.st-aj.st-c1.st-cl.st-cm.st-cn{
+    color: black;
+    caret-color: black;
+}
+
+input.st-be.st-bz.st-c0.st-c1.st-c2.st-c3.st-c4.st-c5.st-c6.st-c7.st-c8.st-b9.st-c9.st-ca.st-cb.st-cc.st-cd.st-ce.st-cf.st-cg.st-ae.st-af.st-ag.st-ch.st-ai.st-aj.st-by.st-ci.st-cj.st-ck{
+    color: black;
+    caret-color: black
+}
+
+div.st-emotion-cache-6qob1r.eczjsme3{
+    background-color: #2D063D;
 }
