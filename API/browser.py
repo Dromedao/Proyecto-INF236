@@ -1,4 +1,6 @@
 import requests
+import os
+from dotenv import load_dotenv
 import openai
 import pyshorteners
 from bs4 import BeautifulSoup
@@ -156,7 +158,8 @@ def search_tallerista(requeriments):
     #     print("No se han encontrado talleristas para la ocasión...")
         workshoppers.append("No se han encontrado talleristas para la ocasión")
     # print()
-    return workshoppers
+    print(tallerista, "TALLERISTATALLERISTATALLERISTA")
+    return workshoppers, tallerista
 
 def search_material(requeriments):
     implementos = list(map(lambda x: x.strip(), requeriments[1].split(",")))
@@ -235,9 +238,13 @@ def search_material(requeriments):
     return materials
 
 #KEYS
-API_KEY = open("API_KEY").read()
-SEARCH_ENGINE_ID = open('SEARCH_ENGINE_ID').read()
-API_OPENAI_KEY = open("API_OPENAI_KEY").read()
+# API_KEY = open("API_KEY").read()
+load_dotenv()
+API_KEY = os.getenv("API_KEY")
+# SEARCH_ENGINE_ID = open('SEARCH_ENGINE_ID').read()
+SEARCH_ENGINE_ID = os.getenv("SEARCH_ENGINE_ID")
+# API_OPENAI_KEY = open("API_OPENAI_KEY").read()
+API_OPENAI_KEY = os.getenv("API_OPENAI_KEY")
 
 
 def caller(mensaje):
@@ -262,7 +269,8 @@ def caller(mensaje):
             response = openai_api(mensaje + formato, role_system)
             requeriments_list = list(map(lambda x: x.split(":")[1][1:] if ":" in x else x,response.strip().split("\n")))
             if ("FALTANTE" not in requeriments_list[0]):
-                posibles_talleristas = search_tallerista(requeriments_list)
+                posibles_talleristas, type_of = search_tallerista(requeriments_list)
+                print(type_of, "TYPE_OFTYPE_OFTYPE_OFTYPE_OFTYPE_OF")
                 # if "FALTANTE" not in requeriments_list[1]:
                 #     materiales = search_material(requeriments_list)
                 # else:
@@ -278,4 +286,4 @@ def caller(mensaje):
             return {"workshoppers": ["No se han encontrado talleristas para la ocasión"]}
     
         # return {"workshoppers": posibles_talleristas, "materials":materiales}
-        return {"workshoppers": posibles_talleristas}
+        return {"workshoppers": posibles_talleristas, "type_of": type_of}
