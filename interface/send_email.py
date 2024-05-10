@@ -11,9 +11,10 @@ def send_email(email_receiver, name_receiver):
         email_sender = os.getenv("ACCOUNT")
         password = os.getenv("ACCOUNT_PASSWORD")
 
-        subject = "ASUNTO DEL EMAIL"
+        subject = f"¡Hola {name_receiver}!"
         body = f"""
         Hola {name_receiver} ¡El sistema de detección de talleristas de Apprende te ha encontrado! se te envía este correo con la intención de que nos puedas compartir una propuesta de un taller y así podamos trabajar juntos.
+        Lo cual podrás realizar mediante el siguiente link de formulario de contacto: https://forms.gle/2LWtV9Xaix3nhvJ98
         """
 
         em = EmailMessage()

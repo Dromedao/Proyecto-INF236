@@ -16,25 +16,36 @@ hide_st_style = """
 """
 st.markdown(hide_st_style, unsafe_allow_html=True)
 
-def show_workshoppers(workshoppers):
-    for workshopper in workshoppers:
-        print(workshopper)
-        st.write(f"{workshopper[0][0].upper()}{workshopper[0][1:]}  {workshopper[1]}  {workshopper[2]}")
-        if st.button("Contactar", key=f"{uuid.uuid4()}"):
-            st.write(f"Contactado a {workshopper[0]}")
-            with st.spinner("Contactando..."):
-                # contact_response = send_email(workshopper[2], workshopper[0][0].upper() + workshopper[0][1:])
-                contact_response = send_email("matiasguerravalles@gmail.com", "Matías")
-                st.write("Se envió un correo al tallerista")
-                api_url = "http://127.0.0.1:8000/contact"
+def show_workshoppers(workshoppers, type_of):
+    print(type_of, "LLLLLLLLLLLLEEEEEEEEEEGGGGGGGGGGGGGOoOOOOOOOOOO")
+    type_of = str(type_of).replace(",","").replace(".","")
+    for idx, workshopper in enumerate(workshoppers):
+        try:
+            st.write(f"{workshopper[0][0].upper()}{workshopper[0][1:]}  {workshopper[1]}  {workshopper[2]}")
+            if st.button("Contactar", key=f"{idx}{workshopper[0]}{workshopper[1]}{workshopper[2]}"):
+                print("BOTON CONTACTO")
+                st.write(f"Contactado a {workshopper[0][0].upper()}{workshopper[0][1:]}")
+                with st.spinner("Contactando..."):
+                    print("ENTRO AL BOTON")
+                    # contact_response = send_email(workshopper[2], workshopper[0][0].upper() + workshopper[0][1:])
+                    # contact_response = send_email("matiasguerravalles@gmail.com", workshopper[0][0].upper() + workshopper[0][1:])
 
-                data = {
-                    "name": workshopper[0][0].upper() + workshopper[0][1:],
-                    "email": workshopper[2],
-                    "state": 0,
-                    "decision":0
-                }
-                response = requests.post(api_url, json=data)
+                    data = {
+                        "name": workshopper[0][0].upper() + workshopper[0][1:],
+                        "email": workshopper[2],
+                        "type_of": type_of,
+                        "state": 0,
+                        "decision":0
+                    }
+                    print(data, "DDDDDDDDDDDDDAAAAAAAAAAAATTTTTTTTTTTAAAAAAAAAAAA")
+                    api_url = "http://127.0.0.1:8000/contact"
+                    response = requests.post(api_url, json=data)
+
+                    api_url = "http://127.0.0.1:8000/send_email"
+                    requests.get(api_url, json=data)
+                    st.write("Se envió un correo al tallerista")
+        except:
+            pass
 
 def send_to_api(texto):
     total = 0
@@ -43,17 +54,18 @@ def send_to_api(texto):
         data = {"prompt": texto}
         
         response = requests.post(api_url, json=data)
-        print(response.json())
+        # print(response.json())
         
         if response.status_code == 200 or response.status_code == 201:
             st.success("Resultados :mag:")
             st.subheader("Talleristas")
             if isinstance(response.json()["workshoppers"][0], str):
-                print("ENTRO")
+                # print("ENTRO")
                 st.write("No se han encontrado talleristas...")
             else:
                 st.session_state.workshoppers = response.json()["workshoppers"]
-                show_workshoppers(response.json()["workshoppers"])
+                print(response.json()["type_of"], "AAAAAAAAAAAAAAAAAAAAA")
+                show_workshoppers(response.json()["workshoppers"], response.json()["type_of"])
 
             # st.subheader("Materiales sugeridos")
             # for material in response.json()["materials"][0]:
@@ -71,6 +83,8 @@ def send_to_api(texto):
         else:
             st.error(f"Error en la solicitud. Código de estado: {response.status_code}")
             st.write(response.text)
+        print(response.json()["type_of"], "TTTTTTTTTTTTIIIIIIIIIIPPPPPPPPPPOOOOOOOO")
+        return response.json()["type_of"]
 
 def budget(url):
     response = requests.get(url)
@@ -133,12 +147,13 @@ image = Image.open('static/img/logo.jpeg')
 st.image(image, width=120)
 st.title("Apprende: Crear un taller")
 search = st.text_input('Ingresa la descripción del taller')
+# type_of = ""
 
 if st.button("Enviar a API", key="enviar_a_api_button"):
-    send_to_api(search)
+    st.session_state.type_of = send_to_api(search)
 
 if "workshoppers" in st.session_state:
-    show_workshoppers(st.session_state.workshoppers)
+    show_workshoppers(st.session_state.workshoppers, st.session_state.type_of)
 
 if st.button("Historial de busquedas"):
     history()
