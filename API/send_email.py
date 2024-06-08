@@ -13,9 +13,19 @@ def send_email(email_receiver, name_receiver):
 
         subject = f"¡Hola {name_receiver}!"
         body = f"""
-        Hola {name_receiver} ¡El sistema de detección de talleristas de Apprende te ha encontrado! se te envía este correo con la intención de que nos puedas compartir una propuesta de un taller y así podamos trabajar juntos.
-        Lo cual podrás realizar mediante el siguiente link de formulario de contacto: https://forms.gle/2LWtV9Xaix3nhvJ98
+        Hola {name_receiver},
+
+        Nos complace informarte que has sido seleccionado por nuestro sistema de detección de talleristas de Apprende como un candidato ideal para colaborar con nosotros. Estamos entusiasmados por la posibilidad de trabajar contigo y estamos interesados en conocer más sobre tus propuestas de talleres.
+        Para avanzar en esta colaboración, te invitamos a compartir una propuesta de taller con nosotros. Puedes hacerlo a través del siguiente formulario de contacto:
+
+        [Formulario de Propuesta de Taller] (https://forms.gle/2LWtV9Xaix3nhvJ98)
+
+        Agradecemos de antemano tu tiempo y esperamos con interés recibir tu propuesta. Si tienes alguna pregunta o necesitas más información, no dudes en contactarnos.
+
+        Saludos cordiales,
+        Equipo de Apprende
         """
+
 
         em = EmailMessage()
         em["From"] = email_sender

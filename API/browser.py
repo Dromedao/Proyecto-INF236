@@ -52,12 +52,10 @@ def search_tallerista(requeriments):
     workshoppers = []
     emails = []
     print("TALLERISTAS SUGERIDOS")
-    #ANTERIORMENTE 5
+
     linkedin = google_search('"@gmail.com" site:cl.linkedin.com/in/ ' + tallerista , 10)
-    # print("\n\n",linkedin,"\n\n")
     try:
         for item in linkedin:
-            # print("\n\n",item["snippet"],"\n\n")
             for element in item["snippet"].split():
                 element = element.replace("http://","")
                 if "@" in element:
@@ -72,10 +70,8 @@ def search_tallerista(requeriments):
         boolean_talleristas = False
 
     linkedin = google_search('"@outlook.com" site:cl.linkedin.com/in/ ' + tallerista , 10)
-    # print("\n\n",linkedin,"\n\n")
     try:
         for item in linkedin:
-            # print("\n\n",item["snippet"],"\n\n")
             for element in item["snippet"].split():
                 if "@" in element:
                     element = element.replace("http://","")
@@ -90,10 +86,8 @@ def search_tallerista(requeriments):
         boolean_talleristas = False
 
     linkedin = google_search('"@hotmail.com" site:cl.linkedin.com/in/ ' + tallerista , 10)
-    # print("\n\n",linkedin,"\n\n")
     try:
         for item in linkedin:
-            # print("\n\n",item["snippet"],"\n\n")
             for element in item["snippet"].split():
                 if "@" in element:
                     element = element.replace("http://","")
@@ -108,10 +102,8 @@ def search_tallerista(requeriments):
         boolean_talleristas = False
 
     linkedin = google_search('"@yahoo.com" site:cl.linkedin.com/in/ ' + tallerista , 10)
-    # print("\n\n",linkedin,"\n\n")
     try:
         for item in linkedin:
-            # print("\n\n",item["snippet"],"\n\n")
             for element in item["snippet"].split():
                 if "@" in element:
                     element = element.replace("http://","")
@@ -124,40 +116,11 @@ def search_tallerista(requeriments):
                     break
     except: 
         boolean_talleristas = False
-    # print(emails)
     emails = list(set(emails))
     print(emails)
-    #ANTERIORMENTE 5
-    # superprof = google_search('"@gmail.com" site:superprof.com/ ' + tallerista, 8)
-    # try:
-    #     for item in superprof:
-    #         # print("\n\n",item["snippet"].split(),"\n\n")
-    #         for element in item["snippet"].split():
-    #             if "@" in element:
-    #                 print("\n\n",element,"\n\n")
-    #         url = item['link']
-    #         page = requests.get(url)
-    #         soup = BeautifulSoup(page.content, 'html.parser')
-    #         elements_with_class = (soup.find_all(attrs={"class": "name"}))
-    #         elements_with_class2 = (soup.find_all(attrs={"class": "landing-v4-ads-pic-firstname"}))
-    #         try:
-    #             if len(elements_with_class) != 0:
-    #                 # print("\t",elements_with_class[0].text, url)
-    #                 workshoppers.append([elements_with_class[0].text, url])
-    #             elif len(elements_with_class2) != 0:
-    #                 # print("\t",elements_with_class2[0].text, url)
-    #                 workshoppers.append([elements_with_class2[0].text, url])
-    #         except:
-    #             # print(url)
-    #             pass
-    #         if boolean_talleristas == False:
-    #             boolean_talleristas = True
-    # except:
-    #     pass
+    
     if boolean_talleristas == False:
-    #     print("No se han encontrado talleristas para la ocasión...")
         workshoppers.append("No se han encontrado talleristas para la ocasión")
-    # print()
     print(tallerista, "TALLERISTATALLERISTATALLERISTA")
     return workshoppers, tallerista
 
@@ -177,7 +140,6 @@ def search_material(requeriments):
         shortener = pyshorteners.Shortener()
         presupuesto = 0
         for implemento in materials[0]:
-            ##########################
             print(implemento.lower())
             if implemento.lower() in STATIONERY_STORE:
                 print("STATIONARY")
@@ -212,22 +174,13 @@ def search_material(requeriments):
                     if h1_element and span_element:
                         product_name = h1_element.text.strip()
                         precio = span_element.text.strip()
-                        # print(f"\t {product_name} - {precio[3:]} - {shortener.tinyurl.short(url)}")
                         materials[1].append([product_name, precio[3:], shortener.tinyurl.short(url)])
                         presupuesto += int(precio[3:].replace(".", ""))
                     else:
                         print("\t No se encontró", implemento)
                 except:
                     print("\t No se encontró", implemento)
-            # elif implemento in SUPERMARKET:
-            #     pass
-            # elif implemento in CAKE_SHOP:
-            #     pass
-            # elif implemento in TECHNOLOGY_STORE:
-            #     pass
-            # else:
-            #     pass
-            ##########################
+
         if presupuesto != 0:
             print(f"PRESUPUESTO SUGERIDO: {presupuesto}")
         else:
@@ -238,24 +191,15 @@ def search_material(requeriments):
     return materials
 
 #KEYS
-# API_KEY = open("API_KEY").read()
 load_dotenv()
 API_KEY = os.getenv("API_KEY")
-# SEARCH_ENGINE_ID = open('SEARCH_ENGINE_ID').read()
 SEARCH_ENGINE_ID = os.getenv("SEARCH_ENGINE_ID")
-# API_OPENAI_KEY = open("API_OPENAI_KEY").read()
 API_OPENAI_KEY = os.getenv("API_OPENAI_KEY")
 
 
 def caller(mensaje):
     fine = False
     while fine == False:
-        #Question to the user
-        # mensaje = input("Que taller desea realizar?: ")
-        # print()
-
-        #formato = " | Clasificar en el formato. Tipo de taller: \nImplementos necesarios: (en caso de no indicarse, proponer los minimos necesarios en SINGULAR, solo poner cada implemento seguido de una coma)\nHabilidad tallerista: (lo que tiene que ser el encargado del taller en pocas palabras. oficio o profesion)\nRango de edad: (niños/adultos/tercera edad/adolecentes/etc)\nCiudad para el taller: \nSector de la ciudad: \nPresupuesto: . (Se debe seguir el anterior formato, en caso de no poder encontrar un punto en el prompt se debe indicar con FALTANTE. En caso de la busqueda ser insuficiente para clasificar poner FALTANTE"
-        #role_system = "Recibes el prompt para la creación de un taller. Solo clasificar el mismo, sin palabras innecesarias"
         formato = ""
         role_system = "Classify in the format. Type of workshop: \nNecessary implements: (if not indicated, propose the minimum necessary in SINGULAR, only put each implement followed by a comma, without putting etc or and)\nWorkshop skill: (which must be the person in charge of the workshop in few words. trade or profession)\nAge range: (children/adults/seniors/adolescents/etc)\nCity for the workshop: (if not indicated, put FALTANTE)\nSector of the city: \nBudget: . The previous format must be followed; if you cannot find a point in the prompt, it must be indicated with FALTANTE. You must respond in Spanish"
         #0: Tipo de taller
@@ -271,19 +215,11 @@ def caller(mensaje):
             if ("FALTANTE" not in requeriments_list[0]):
                 posibles_talleristas, type_of = search_tallerista(requeriments_list)
                 print(type_of, "TYPE_OFTYPE_OFTYPE_OFTYPE_OFTYPE_OF")
-                # if "FALTANTE" not in requeriments_list[1]:
-                #     materiales = search_material(requeriments_list)
-                # else:
-                #     materiales = [["No se sugieren materiales..."],["No se buscan materiales..."]]
-                #     print("No se sugieren materiales...")
             else:
                 print("No se cumplen con los minimos requerimientos para realizar la busqueda...\n")
-                # return {"workshoppers": ["No se han encontrado talleristas para la ocasión"], "materials":[["No se sugieren materiales..."],["No se buscan materiales..."]]}
                 return {"workshoppers": ["No se han encontrado talleristas para la ocasión"]}
         else:
             print("No se cumplen con los minimos requerimientos para realizar la busqueda...\n")
-            # return {"workshoppers": ["No se han encontrado talleristas para la ocasión"], "materials":[["No se sugieren materiales..."],["No se buscan materiales..."]]}
             return {"workshoppers": ["No se han encontrado talleristas para la ocasión"]}
     
-        # return {"workshoppers": posibles_talleristas, "materials":materiales}
         return {"workshoppers": posibles_talleristas, "type_of": type_of}
