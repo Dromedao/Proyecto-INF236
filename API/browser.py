@@ -47,36 +47,33 @@ def openai_api(query, role):
 
 def search_tallerista(requeriments):
     tallerista = requeriments[2]
-    boolean_talleristas = True
-
     workshoppers = []
-    emails = []
+    emails = set()
     email_domains = ["@gmail.com", "@outlook.com", "@hotmail.com", "@yahoo.com"]
 
     for domain in email_domains:
-        linkedin = google_search(f'"{domain}" site:cl.linkedin.com/in/ {tallerista}', 10)
-        try:
-            for item in linkedin:
-                for element in item["snippet"].split():
-                    if "@" in element:
-                        element = element.replace("http://", "")
-                        if element[-1] != "m" and "m" in element:
-                            element = element[:len(element) - element[::-1].index("m")]
-                        email = element.strip()
-                        print("\n\n", email, "\n\n")
-                        emails.append(email)
-                        url = item['link']
-                        workshoppers.append([url[27:].split("-")[0], url, email])
-                        break
-        except:
-            boolean_talleristas = False
+        search_query = f'"{domain}" site:cl.linkedin.com/in/ {tallerista}'
+        linkedin_results = google_search(search_query, 10)
+        for result in linkedin_results:
+            email = extract_email(result["snippet"])
+            if email:
+                emails.add(email)
+                url = result['link']
+                workshoppers.append([url[27:].split("-")[0], url, email])
+                break
 
-    emails = list(set(emails))
-
-    if not boolean_talleristas:
+    if not workshoppers:
         workshoppers.append("No se han encontrado talleristas para la ocasión")
 
     return workshoppers, tallerista
+
+def extract_email(text):
+    for element in text.split():
+        if "@" in element:
+            email = element.strip().replace("http://", "")
+            if "m" in email:
+                return email[:email.index("m")]
+    return None
 
 
 # Suposición de la función google_search existente para completar la implementación
