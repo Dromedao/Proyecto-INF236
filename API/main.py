@@ -150,6 +150,7 @@ def sender_email(workshopper: Workshopper):
 def scrape_form():
     try:
         scrape = scrapeDataFromSpreadsheet()
+        print("\n", scrape)
         return {"results": scrape}
     except Exception as e:
         raise HTTPException(status_code=500, detail="Error interno del servidor")

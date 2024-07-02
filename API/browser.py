@@ -51,78 +51,38 @@ def search_tallerista(requeriments):
 
     workshoppers = []
     emails = []
-    print("TALLERISTAS SUGERIDOS")
+    email_domains = ["@gmail.com", "@outlook.com", "@hotmail.com", "@yahoo.com"]
 
-    linkedin = google_search('"@gmail.com" site:cl.linkedin.com/in/ ' + tallerista , 10)
-    try:
-        for item in linkedin:
-            for element in item["snippet"].split():
-                element = element.replace("http://","")
-                if "@" in element:
-                    if element[-1] != "m" and "m" in element:
-                        element = element[:len(element)-element[::-1].index("m")]
-                    print("\n\n",element.strip(),"\n\n")
-                    emails.append(element.strip())
-                    url = item['link']
-                    workshoppers.append([url[27:].split("-")[0], url, element.strip()])
-                    break
-    except:
-        boolean_talleristas = False
+    for domain in email_domains:
+        linkedin = google_search(f'"{domain}" site:cl.linkedin.com/in/ {tallerista}', 10)
+        try:
+            for item in linkedin:
+                for element in item["snippet"].split():
+                    if "@" in element:
+                        element = element.replace("http://", "")
+                        if element[-1] != "m" and "m" in element:
+                            element = element[:len(element) - element[::-1].index("m")]
+                        email = element.strip()
+                        print("\n\n", email, "\n\n")
+                        emails.append(email)
+                        url = item['link']
+                        workshoppers.append([url[27:].split("-")[0], url, email])
+                        break
+        except:
+            boolean_talleristas = False
 
-    linkedin = google_search('"@outlook.com" site:cl.linkedin.com/in/ ' + tallerista , 10)
-    try:
-        for item in linkedin:
-            for element in item["snippet"].split():
-                if "@" in element:
-                    element = element.replace("http://","")
-                    if element[-1] != "m" and "m" in element:
-                        element = element[:len(element)-element[::-1].index("m")]
-                    print("\n\n",element.strip(),"\n\n")
-                    emails.append(element.strip())
-                    url = item['link']
-                    workshoppers.append([url[27:].split("-")[0], url, element.strip()])
-                    break
-    except:
-        boolean_talleristas = False
-
-    linkedin = google_search('"@hotmail.com" site:cl.linkedin.com/in/ ' + tallerista , 10)
-    try:
-        for item in linkedin:
-            for element in item["snippet"].split():
-                if "@" in element:
-                    element = element.replace("http://","")
-                    if element[-1] != "m" and "m" in element:
-                        element = element[:len(element)-element[::-1].index("m")]
-                    print("\n\n",element.strip(),"\n\n")
-                    emails.append(element.strip())
-                    url = item['link']
-                    workshoppers.append([url[27:].split("-")[0], url, element.strip()])
-                    break
-    except:
-        boolean_talleristas = False
-
-    linkedin = google_search('"@yahoo.com" site:cl.linkedin.com/in/ ' + tallerista , 10)
-    try:
-        for item in linkedin:
-            for element in item["snippet"].split():
-                if "@" in element:
-                    element = element.replace("http://","")
-                    if element[-1] != "m" and "m" in element:
-                        element = element[:len(element)-element[::-1].index("m")]
-                    print("\n\n",element.strip(),"\n\n")
-                    emails.append(element.strip())
-                    url = item['link']
-                    workshoppers.append([url[27:].split("-")[0], url, element.strip()])
-                    break
-    except: 
-        boolean_talleristas = False
     emails = list(set(emails))
-    print(emails)
-    
-    if boolean_talleristas == False:
+
+    if not boolean_talleristas:
         workshoppers.append("No se han encontrado talleristas para la ocasión")
-    print(tallerista, "TALLERISTATALLERISTATALLERISTA")
+
     return workshoppers, tallerista
+
+
+# Suposición de la función google_search existente para completar la implementación
+def google_search(query, num_results):
+    # Simula una búsqueda en Google. Implementa esta función con la lógica de búsqueda real.
+    return [{'snippet': 'Contacto http://profile @gmail.com', 'link': 'https://cl.linkedin.com/in/johndoe'}]
 
 def search_material(requeriments):
     implementos = list(map(lambda x: x.strip(), requeriments[1].split(",")))
@@ -196,30 +156,24 @@ API_KEY = os.getenv("API_KEY")
 SEARCH_ENGINE_ID = os.getenv("SEARCH_ENGINE_ID")
 API_OPENAI_KEY = os.getenv("API_OPENAI_KEY")
 
-
 def caller(mensaje):
     fine = False
-    while fine == False:
-        formato = ""
-        role_system = "Classify in the format. Type of workshop: \nNecessary implements: (if not indicated, propose the minimum necessary in SINGULAR, only put each implement followed by a comma, without putting etc or and)\nWorkshop skill: (which must be the person in charge of the workshop in few words. trade or profession)\nAge range: (children/adults/seniors/adolescents/etc)\nCity for the workshop: (if not indicated, put FALTANTE)\nSector of the city: \nBudget: . The previous format must be followed; if you cannot find a point in the prompt, it must be indicated with FALTANTE. You must respond in Spanish"
-        #0: Tipo de taller
-        #1: Implementos
-        #2: Habilidad tallerista
-        #3: Ciudad taller
-        #4: Sector ciudad
-        #5: Presupuesto
-        if (len(mensaje) != 0):
-            print(mensaje)
-            response = openai_api(mensaje + formato, role_system)
-            requeriments_list = list(map(lambda x: x.split(":")[1][1:] if ":" in x else x,response.strip().split("\n")))
-            if ("FALTANTE" not in requeriments_list[0]):
-                posibles_talleristas, type_of = search_tallerista(requeriments_list)
-                print(type_of, "TYPE_OFTYPE_OFTYPE_OFTYPE_OFTYPE_OF")
-            else:
-                print("No se cumplen con los minimos requerimientos para realizar la busqueda...\n")
-                return {"workshoppers": ["No se han encontrado talleristas para la ocasión"]}
+    formato = ""
+    role_system = "Classify in the format. Type of workshop: \nNecessary implements: (if not indicated, propose the minimum necessary in SINGULAR, only put each implement followed by a comma, without putting etc or and)\nWorkshop skill: (which must be the person in charge of the workshop in few words. trade or profession)\nAge range: (children/adults/seniors/adolescents/etc)\nCity for the workshop: (if not indicated, put FALTANTE)\nSector of the city: \nBudget: . The previous format must be followed; if you cannot find a point in the prompt, it must be indicated with FALTANTE. You must respond in Spanish"
+    #0: Tipo de taller
+    #1: Implementos
+    #2: Habilidad tallerista
+    #3: Ciudad taller
+    #4: Sector ciudad
+    #5: Presupuesto
+    if (len(mensaje) != 0):
+        print(mensaje)
+        response = openai_api(mensaje + formato, role_system)
+        requeriments_list = list(map(lambda x: x.split(":")[1][1:] if ":" in x else x,response.strip().split("\n")))
+        if ("FALTANTE" not in requeriments_list[0]):
+            posibles_talleristas, type_of = search_tallerista(requeriments_list)
         else:
-            print("No se cumplen con los minimos requerimientos para realizar la busqueda...\n")
             return {"workshoppers": ["No se han encontrado talleristas para la ocasión"]}
-    
-        return {"workshoppers": posibles_talleristas, "type_of": type_of}
+    else:
+        return {"workshoppers": ["No se han encontrado talleristas para la ocasión"]}
+    return {"workshoppers": posibles_talleristas, "type_of": type_of}
