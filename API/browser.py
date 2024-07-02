@@ -45,6 +45,14 @@ def openai_api(query, role):
     print(completion.choices[0].message.content)
     return completion.choices[0].message.content
 
+def extract_email(text):
+    for element in text.split():
+        if "@" in element:
+            email = element.strip().replace("http://", "")
+            if "m" in email:
+                return email[:email.index("m")]
+    return None
+
 def search_tallerista(requeriments):
     tallerista = requeriments[2]
     workshoppers = []
@@ -54,26 +62,22 @@ def search_tallerista(requeriments):
     for domain in email_domains:
         search_query = f'"{domain}" site:cl.linkedin.com/in/ {tallerista}'
         linkedin_results = google_search(search_query, 10)
+        found = False
         for result in linkedin_results:
             email = extract_email(result["snippet"])
             if email:
                 emails.add(email)
                 url = result['link']
                 workshoppers.append([url[27:].split("-")[0], url, email])
+                found = True
                 break
+        if found:
+            break
 
     if not workshoppers:
         workshoppers.append("No se han encontrado talleristas para la ocasión")
 
     return workshoppers, tallerista
-
-def extract_email(text):
-    for element in text.split():
-        if "@" in element:
-            email = element.strip().replace("http://", "")
-            if "m" in email:
-                return email[:email.index("m")]
-    return None
 
 
 # Suposición de la función google_search existente para completar la implementación
